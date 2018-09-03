@@ -33,6 +33,7 @@ class Example(QtGui.QWidget):
         #self.icon_title=self.cf.get("system","icon_title")
         self.icon_image='Hello_Kitty.jpg'
         self.icon_title='time-meter'
+        self.socketStyle_w_select = "#widget_msg {border: 5px outset #BF408C;padding: 5px;border-radius: 15px;}widget *{}" 
         self.initUI()
         
     def initUI(self):               
@@ -42,6 +43,7 @@ class Example(QtGui.QWidget):
         self.setWindowIcon(QtGui.QIcon(self.icon_image))
         self.center()
         self.welcomeMsg()
+	self.taskListInit()
         self.show()
         
     def center(self):
@@ -53,6 +55,10 @@ class Example(QtGui.QWidget):
     def welcomeMsg(self):
     	#set the Msg label.
         self.widget_msg=QtGui.QWidget(self)
+        self.widget_msg.setObjectName(_fromUtf8("widget_msg"))
+
+        self.widget_msg.setStyleSheet(self.socketStyle_w_select)
+
         self.label_msg=QtGui.QLabel(self.widget_msg)
         self.label_msg.setGeometry(QtCore.QRect(20,20,420,56))
         font=QtGui.QFont()
@@ -64,7 +70,32 @@ class Example(QtGui.QWidget):
         self.label_msg.setText(QtGui.QApplication.translate("MainWindow","208-09-03 11:30 Monday\n Welcome home, Child",None,QtGui.QApplication.UnicodeUTF8))
     def TimerStart(self):
     	pass
-    def TaskListInit(self):
+    def taskListInit(self):
+        self.widget_task_list= QtGui.QTableWidget(self)
+        self.widget_task_list.setGeometry(QtCore.QRect(500,0 ,580, 340))
+        self.widget_task_list.setObjectName(_fromUtf8("#table"))
+        self.widget_task_list.clear()
+        self.widget_task_list.setRowCount(10)
+        self.widget_task_list.setColumnCount(5)
+        self.widget_task_list.setHorizontalHeaderLabels(["Subject", "Descript", "Status",
+                "StartTime", "Time Cost"])
+        self.widget_task_list.setAlternatingRowColors(True)
+        self.widget_task_list.setEditTriggers(QtGui.QTableWidget.NoEditTriggers)
+        self.widget_task_list.setSelectionBehavior(QtGui.QTableWidget.SelectRows)
+        self.widget_task_list.setSelectionMode(QtGui.QTableWidget.SingleSelection)
+
+        task_list=[["Englisth", "page11 to page 12 read the english documents"],["Chinese", "page 12-12 recsite the documents"],["Math", "Read all the documents"]]
+        i=0
+        for task in task_list:
+            j=0
+            for task_detail in task:
+                item = QtGui.QTableWidgetItem(task_detail)
+                self.widget_task_list.setItem(i, j, item)
+                j=j+1
+            i=i+1
+        self.widget_task_list.resizeColumnsToContents()
+
+
     	pass
         
         

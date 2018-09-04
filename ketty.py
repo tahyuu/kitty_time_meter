@@ -48,6 +48,7 @@ class Example(QtGui.QWidget):
         
     def initUI(self):               
         self.currentTaskId=-1
+        self.justSender=None
         self.SetTaskList()
         self.resize(1280, 800)
         self.setWindowTitle(self.icon_title)
@@ -130,18 +131,25 @@ class Example(QtGui.QWidget):
         self.timer.start(1000)
         print(self.sender().text())
         if self.sender().text()=="Start":
+            self.justSender=self.sender()
             self.sender().setText("Stop")
-            self.task_list[int(i)][3]="Stop"
+            self.task_list[int(i)][2]=time.strftime("%m/%d %H:%M:%S", time.localtime())
         else:
+            self.justSender=self.sender()
             self.sender().setText("Start")
-            self.task_list[int(i)][3]="Start"
-        self.task_list[int(i)][2]=time.strftime("%m/%d %H:%M:%S", time.localtime())
+            self.task_list[int(i)][3]=time.strftime("%m/%d %H:%M:%S", time.localtime())
+            timecost=time.time()-self.startTime
+            hours=int(timecost/3600)
+            minutes=int((timecost-hours*3600)/60)
+            seconds=timecost%60
+            text = "%02d:%02d:%02d" % (hours,minutes,seconds)
+            self.task_list[int(i)][4]=text
         self.currentTaskId=int(i)
     def SetTaskList(self):
-        self.task_list=[["Englisth", "page11 to page 12 ","","Start"],\
-        	        ["Chinese", "page 12-12 recsite ","","Start"],\
-        	        ["Math", "Read all the documents","","Start"],\
-        	        ["Math", "Read all the documents","","Start"],\
+        self.task_list=[["Englisth", "page11 to page 12 ","","","","Start"],\
+        	        ["Chinese", "page 12-12 recsite ","","","","Start"],\
+        	        ["Math", "Read all the documents","","","","Start"],\
+        	        ["Math", "Read all the documents","","","","Start"],\
         		]
     def updateDisplay(self):
         timecost=time.time()-self.startTime
@@ -159,9 +167,9 @@ class Example(QtGui.QWidget):
         self.widget_task_list.setObjectName(_fromUtf8("#table"))
         self.widget_task_list.clear()
         self.widget_task_list.setRowCount(10)
-        self.widget_task_list.setColumnCount(5)
-        self.widget_task_list.setHorizontalHeaderLabels(["Subject", "Descript", "Status",
-                "StartTime", "Time Cost"])
+        self.widget_task_list.setColumnCount(6)
+        self.widget_task_list.setHorizontalHeaderLabels(["Subject", "Descript", "StartTime",
+                "EndTime", "TimeCost","Status"])
         self.widget_task_list.setAlternatingRowColors(True)
         self.widget_task_list.setEditTriggers(QtGui.QTableWidget.NoEditTriggers)
         self.widget_task_list.setSelectionBehavior(QtGui.QTableWidget.SelectRows)
@@ -183,8 +191,10 @@ class Example(QtGui.QWidget):
                 if i<len(row_data)-1:
                     self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(str(row_data[i])))
                 if i==len(row_data)-1:
-                    self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),str(row_data[-1])))
-        #self.widget_task_list.resizeColumnsToContents()
+                    #when the rowid==-1, that means the first time we just need to update add the button
+                    if rowid==-1:
+                    	self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),str(row_data[-1])))
+        self.widget_task_list.resizeColumnsToContents()
 def main():
     
     app = QtGui.QApplication(sys.argv)

@@ -15,6 +15,7 @@ last edited: October 2011
 import sys
 from PyQt4 import QtGui,QtCore
 import time
+import datetime
 #import ConfigParser 
 
 
@@ -54,7 +55,7 @@ class Example(QtGui.QWidget):
         self.setWindowTitle(self.icon_title)
         self.setWindowIcon(QtGui.QIcon(self.icon_image))
         self.center()
-        self.welcomeMsg()
+        #self.welcomeMsg()
         self.taskListInit()
         self.TimerStart()
         self.show()
@@ -116,29 +117,29 @@ class Example(QtGui.QWidget):
         self.label_msg.setText(QtGui.QApplication.translate("MainWindow","208-09-03 11:30 Monday\n Welcome home, Child",None,QtGui.QApplication.UnicodeUTF8))
     def TimerStart(self):
         self.lcdNumber = QtGui.QLCDNumber(self)
-        self.lcdNumber.setGeometry(QtCore.QRect(600, 600, 231, 61))
+        self.lcdNumber.setGeometry(QtCore.QRect(10, 600, 1250, 280))
         font = QtGui.QFont()
         font.setPointSize(13)
         self.lcdNumber.setFont(font)
         self.lcdNumber.setNumDigits(8)
         self.lcdNumber.setMode(QtGui.QLCDNumber.Bin)
         self.lcdNumber.setObjectName(_fromUtf8("lcdNumber"))
-        self.lcdNumber.display("00:00:00")
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateDisplay)
     def taskStartEnd(self,i):
-        self.startTime=time.time()
-        self.timer.start(1000)
-        print(self.sender().text())
-        if self.sender().text()=="Start":
-            self.justSender=self.sender()
-            self.sender().setText("Stop")
-            self.task_list[int(i)][2]=time.strftime("%m/%d %H:%M:%S", time.localtime())
+        if self.sender().text()=="Start" or self.sender().text()=="Continue":
+            self.startTime=time.time()
+            print self.sender().text()
+            if self.sender().text()=="Start":
+                self.task_list[int(i)][2]=time.strftime("%H:%M:%S", time.localtime())
+            self.sender().setText("Finished")
+            self.timer.start(1000)
         else:
-            self.justSender=self.sender()
-            self.sender().setText("Start")
-            self.task_list[int(i)][3]=time.strftime("%m/%d %H:%M:%S", time.localtime())
+            self.sender().setText("Continue")
+            self.task_list[int(i)][3]=time.strftime("%H:%M:%S", time.localtime())
+	    self.startTime=time.mktime(time.strptime(time.strftime("%Y/%m/%d ",time.localtime())+self.task_list[int(i)][2],"%Y/%m/%d %H:%M:%S"))
             timecost=time.time()-self.startTime
+            self.timer.stop()
             hours=int(timecost/3600)
             minutes=int((timecost-hours*3600)/60)
             seconds=timecost%60
@@ -146,8 +147,9 @@ class Example(QtGui.QWidget):
             self.task_list[int(i)][4]=text
         self.currentTaskId=int(i)
     def SetTaskList(self):
-        self.task_list=[["Englisth", "page11 to page 12 ","","","","Start"],\
+        self.task_list=[["English", "page11 to page 12 ","","","","Start"],\
         	        ["Chinese", "page 12-12 recsite ","","","","Start"],\
+        	        ["Math", "Read all the documents","","","","Start"],\
         	        ["Math", "Read all the documents","","","","Start"],\
         	        ["Math", "Read all the documents","","","","Start"],\
         		]
@@ -163,7 +165,7 @@ class Example(QtGui.QWidget):
         self.timer.timeout.connect(self.updateDisplay)
     def taskListInit(self):
         self.widget_task_list= QtGui.QTableWidget(self)
-        self.widget_task_list.setGeometry(QtCore.QRect(500,0 ,580, 340))
+        self.widget_task_list.setGeometry(QtCore.QRect(10,10,1260, 540))
         self.widget_task_list.setObjectName(_fromUtf8("#table"))
         self.widget_task_list.clear()
         self.widget_task_list.setRowCount(10)
@@ -194,7 +196,7 @@ class Example(QtGui.QWidget):
                     #when the rowid==-1, that means the first time we just need to update add the button
                     if rowid==-1:
                     	self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),str(row_data[-1])))
-        self.widget_task_list.resizeColumnsToContents()
+        #self.widget_task_list.resizeColumnsToContents()
 def main():
     
     app = QtGui.QApplication(sys.argv)

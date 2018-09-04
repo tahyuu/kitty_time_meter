@@ -14,6 +14,7 @@ last edited: October 2011
 
 import sys
 from PyQt4 import QtGui,QtCore
+import time
 #import ConfigParser 
 
 
@@ -44,6 +45,7 @@ class Example(QtGui.QWidget):
         self.center()
         self.welcomeMsg()
 	self.taskListInit()
+	self.TimerStart()
         self.show()
         
     def center(self):
@@ -69,7 +71,29 @@ class Example(QtGui.QWidget):
         self.label_msg.setObjectName(_fromUtf8("label"))
         self.label_msg.setText(QtGui.QApplication.translate("MainWindow","208-09-03 11:30 Monday\n Welcome home, Child",None,QtGui.QApplication.UnicodeUTF8))
     def TimerStart(self):
-    	pass
+	self.startTime=time.time()
+        self.lcdNumber = QtGui.QLCDNumber(self)
+        self.lcdNumber.setGeometry(QtCore.QRect(600, 600, 231, 61))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        self.lcdNumber.setFont(font)
+        self.lcdNumber.setNumDigits(8)
+        self.lcdNumber.setMode(QtGui.QLCDNumber.Bin)
+        self.lcdNumber.setObjectName(_fromUtf8("lcdNumber"))
+        self.lcdNumber.display("00:00:00")
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.updateDisplay)
+        self.timer.start(1000)
+    def updateDisplay(self):
+        timecost=time.time()-self.startTime
+        hours=int(timecost/3600)
+        minutes=int((timecost-hours*3600)/60)
+        seconds=timecost%60
+        text = "%02d:%02d:%02d" % (hours,minutes,seconds)
+        self.lcdNumber.display(text)
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.updateDisplay)
+	
     def taskListInit(self):
         self.widget_task_list= QtGui.QTableWidget(self)
         self.widget_task_list.setGeometry(QtCore.QRect(500,0 ,580, 340))

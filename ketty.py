@@ -138,6 +138,7 @@ class Example(QtGui.QWidget):
                 self.task_list[int(i)][2]=time.strftime("%H:%M:%S", time.localtime())
             self.sender().setText("Finished")
             self.timer.start(1000)
+            print "XXXXXXXXXXXXXXXXXXXXXXXXX"
         else:
             self.sender().setText("Continue")
             self.task_list[int(i)][3]=time.strftime("%H:%M:%S", time.localtime())
@@ -164,9 +165,7 @@ class Example(QtGui.QWidget):
         seconds=timecost%60
         text = "%02d:%02d:%02d" % (hours,minutes,seconds)
         self.lcdNumber.display(text)
-        self.timer = QtCore.QTimer(self)
         self.updateTaskList()
-        self.timer.timeout.connect(self.updateDisplay)
     def taskListInit(self):
         self.widget_task_list= QtGui.QTableWidget(self)
         self.widget_task_list.setGeometry(QtCore.QRect(10,10,1250, 490))

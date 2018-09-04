@@ -132,7 +132,9 @@ class Example(QtGui.QWidget):
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateDisplay)
     def taskStartEnd(self,i):
+        self.currentIndex=i
         if self.sender().text()=="Start" or self.sender().text()=="Continue":
+            self.startTime=time.time()
             if self.sender().text()=="Start":
                 self.startTime=time.time()
                 self.task_list[int(i)][2]=time.strftime("%H:%M:%S", time.localtime())
@@ -141,14 +143,17 @@ class Example(QtGui.QWidget):
         else:
             self.sender().setText("Continue")
             self.task_list[int(i)][3]=time.strftime("%H:%M:%S", time.localtime())
-            self.startTime=time.mktime(time.strptime(time.strftime("%Y/%m/%d ",time.localtime())+self.task_list[int(i)][2],"%Y/%m/%d %H:%M:%S"))
+            #self.startTime=time.mktime(time.strptime(time.strftime("%Y/%m/%d ",time.localtime())+self.task_list[int(i)][2],"%Y/%m/%d %H:%M:%S"))
+            #self.startTime=time.time()
             timecost=time.time()-self.startTime
+            if self.task_list[int(i)][4]!="":
+                timecost=timecost+int(self.task_list[int(i)][4])
             hours=int(timecost/3600)
             minutes=int((timecost-hours*3600)/60)
             seconds=timecost%60
             text = "%02d:%02d:%02d" % (hours,minutes,seconds)
             self.lcdNumber.display(text)
-            self.task_list[int(i)][4]=text
+            self.task_list[int(i)][4]=str(int(timecost))
             self.timer.stop()
             self.updateTaskList()
         self.currentTaskId=int(i)
@@ -160,7 +165,10 @@ class Example(QtGui.QWidget):
         	        ["Math", "Read all the documents","","","","Start"],\
         		]
     def updateDisplay(self):
+        i=self.currentIndex
         timecost=time.time()-self.startTime
+        if self.task_list[int(i)][4]!="":
+            timecost=timecost+int(self.task_list[int(i)][4])
         hours=int(timecost/3600)
         minutes=int((timecost-hours*3600)/60)
         seconds=timecost%60

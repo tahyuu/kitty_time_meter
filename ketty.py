@@ -38,16 +38,16 @@ class Example(QtGui.QWidget):
         self.initUI()
     def SetTaskList(self):
         self.task_list=[["Englisth", "page11 to page 12 ","","Start"],\
-		        ["Chinese", "page 12-12 recsite ","","Start"],\
-		        ["Math", "Read all the documents","","Start"],\
-		        ["Math", "Read all the documents","","Start"],\
-		        ["Math", "Read all the documents","","Start"],\
-		        ["Math", "Read all the documents","","Start"],\
-		       ]
+        	        ["Chinese", "page 12-12 recsite ","","Start"],\
+        	        ["Math", "Read all the documents","","Start"],\
+        	        ["Math", "Read all the documents","","Start"],\
+        	        ["Math", "Read all the documents","","Start"],\
+        	        ["Math", "Read all the documents","","Start"],\
+        	       ]
 
         
     def initUI(self):               
-	self.currentTaskId=-1
+        self.currentTaskId=-1
         self.SetTaskList()
         self.resize(1280, 800)
         self.setWindowTitle(self.icon_title)
@@ -136,13 +136,13 @@ class Example(QtGui.QWidget):
             self.sender().setText("Start")
             self.task_list[int(i)][3]="Start"
         self.task_list[int(i)][2]=time.strftime("%m/%d %H:%M:%S", time.localtime())
-	self.currentTaskId=int(i)
+        self.currentTaskId=int(i)
     def SetTaskList(self):
         self.task_list=[["Englisth", "page11 to page 12 ","","Start"],\
-		        ["Chinese", "page 12-12 recsite ","","Start"],\
-		        ["Math", "Read all the documents","","Start"],\
-		        ["Math", "Read all the documents","","Start"],\
-			]
+        	        ["Chinese", "page 12-12 recsite ","","Start"],\
+        	        ["Math", "Read all the documents","","Start"],\
+        	        ["Math", "Read all the documents","","Start"],\
+        		]
     def updateDisplay(self):
         timecost=time.time()-self.startTime
         hours=int(timecost/3600)
@@ -168,21 +168,21 @@ class Example(QtGui.QWidget):
         self.widget_task_list.setSelectionMode(QtGui.QTableWidget.SingleSelection)
         self.updateTaskList()
     def updateTaskList(self):
-	rowid=self.currentTaskId
+        rowid=self.currentTaskId
         #self.widget_task_list.clear()
-        print(list(enumerate(self.task_list)))
+        #print(list(enumerate(self.task_list)))
         for row_number, row_data in enumerate(self.task_list):
             #self.widget_task_list.insertRow(row_number)
             #if row is -1 then update all the list
-	    if rowid==-1 or rowid==row_number:
-		pass
+            if rowid==-1 or rowid==row_number:
+                pass
             else:
                 continue
                 
             for i in range(len(row_data)+1):
-                if i<len(row_data):
+                if i<len(row_data)-1:
                     self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(str(row_data[i])))
-                if i==len(row_data):
+                if i==len(row_data)-1:
                     self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),str(row_data[-1])))
         #self.widget_task_list.resizeColumnsToContents()
 def main():

@@ -44,8 +44,8 @@ class Example(QtGui.QWidget):
         self.setWindowIcon(QtGui.QIcon(self.icon_image))
         self.center()
         self.welcomeMsg()
-	self.taskListInit()
-	self.TimerStart()
+        self.taskListInit()
+        self.TimerStart()
         self.show()
         
     def center(self):
@@ -54,6 +54,39 @@ class Example(QtGui.QWidget):
         cp = QtGui.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+    def buttonForRow(self,id):
+        widget=QtGui.QWidget()
+        updateBtn = QtGui.QPushButton('update')
+        updateBtn.setStyleSheet(''' text-align : center;
+                                          background-color : NavajoWhite;
+                                          height : 30px;
+                                          border-style: outset;
+                                          font : 13px  ''')
+
+        updateBtn.clicked.connect(lambda:self.updateTable(id))
+
+        viewBtn = QtGui.QPushButton('view')
+        viewBtn.setStyleSheet(''' text-align : center;
+                                  background-color : DarkSeaGreen;
+                                  height : 30px;
+                                  border-style: outset;
+                                  font : 13px; ''')
+
+        viewBtn.clicked.connect(lambda: self.viewTable(id))
+
+        deleteBtn = QtGui.QPushButton('delete')
+        deleteBtn.setStyleSheet(''' text-align : center;
+                                    background-color : LightCoral;
+                                    height : 30px;
+                                    border-style: outset;
+                                    font : 13px; ''')
+        hLayout = QtGui.QHBoxLayout()
+        hLayout.addWidget(updateBtn)
+        hLayout.addWidget(viewBtn)
+        hLayout.addWidget(deleteBtn)
+        hLayout.setContentsMargins(5,2,5,2)
+        widget.setLayout(hLayout)
+        return widget
     def welcomeMsg(self):
     	#set the Msg label.
         self.widget_msg=QtGui.QWidget(self)
@@ -71,7 +104,7 @@ class Example(QtGui.QWidget):
         self.label_msg.setObjectName(_fromUtf8("label"))
         self.label_msg.setText(QtGui.QApplication.translate("MainWindow","208-09-03 11:30 Monday\n Welcome home, Child",None,QtGui.QApplication.UnicodeUTF8))
     def TimerStart(self):
-	self.startTime=time.time()
+        self.startTime=time.time()
         self.lcdNumber = QtGui.QLCDNumber(self)
         self.lcdNumber.setGeometry(QtCore.QRect(600, 600, 231, 61))
         font = QtGui.QFont()
@@ -108,21 +141,22 @@ class Example(QtGui.QWidget):
         self.widget_task_list.setSelectionBehavior(QtGui.QTableWidget.SelectRows)
         self.widget_task_list.setSelectionMode(QtGui.QTableWidget.SingleSelection)
 
-        task_list=[["Englisth", "page11 to page 12 read the english documents"],["Chinese", "page 12-12 recsite the documents"],["Math", "Read all the documents"]]
-        i=0
-        for task in task_list:
-            j=0
-            for task_detail in task:
-                item = QtGui.QTableWidgetItem(task_detail)
-                self.widget_task_list.setItem(i, j, item)
-                j=j+1
-            i=i+1
+        task_list=[["Englisth", "page11 to page 12 read the english documents","",""],\
+		   ["Chinese", "page 12-12 recsite the documents","",""],\
+		   ["Math", "Read all the documents","",""],\
+		   ["Math", "Read all the documents","",""],\
+		   ["Math", "Read all the documents","",""],\
+		   ["Math", "Read all the documents","",""],\
+		   ]
+        for row_number, row_data in enumerate(task_list):
+            self.widget_task_list.insertRow(row_number)
+            for i in range(len(row_data)+1):
+                if i<len(row_data):
+                    self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(str(row_data[i])))
+                if i==len(row_data):
+                    self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_data[0])))
+
         self.widget_task_list.resizeColumnsToContents()
-
-
-    	pass
-        
-        
 def main():
     
     app = QtGui.QApplication(sys.argv)

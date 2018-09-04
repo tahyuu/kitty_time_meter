@@ -36,9 +36,18 @@ class Example(QtGui.QWidget):
         self.icon_title='time-meter'
         self.socketStyle_w_select = "#widget_msg {border: 5px outset #BF408C;padding: 5px;border-radius: 15px;}widget *{}" 
         self.initUI()
+    def SetTaskList(self):
+        self.task_list=[["Englisth", "page11 to page 12 ","","Start"],\
+		        ["Chinese", "page 12-12 recsite ","","Start"],\
+		        ["Math", "Read all the documents","","Start"],\
+		        ["Math", "Read all the documents","","Start"],\
+		        ["Math", "Read all the documents","","Start"],\
+		        ["Math", "Read all the documents","","Start"],\
+		       ]
+
         
     def initUI(self):               
-        
+        self.SetTaskList()
         self.resize(1280, 800)
         self.setWindowTitle(self.icon_title)
         self.setWindowIcon(QtGui.QIcon(self.icon_image))
@@ -54,16 +63,16 @@ class Example(QtGui.QWidget):
         cp = QtGui.QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-    def buttonForRow(self,id):
+    def buttonForRow(self,id,name):
         widget=QtGui.QWidget()
-        updateBtn = QtGui.QPushButton('update')
+        updateBtn = QtGui.QPushButton(name)
         updateBtn.setStyleSheet(''' text-align : center;
                                           background-color : NavajoWhite;
                                           height : 30px;
                                           border-style: outset;
                                           font : 13px  ''')
 
-        updateBtn.clicked.connect(lambda:self.updateTable(id))
+        updateBtn.clicked.connect(lambda:self.taskStartEnd(id))
 
         viewBtn = QtGui.QPushButton('view')
         viewBtn.setStyleSheet(''' text-align : center;
@@ -82,8 +91,8 @@ class Example(QtGui.QWidget):
                                     font : 13px; ''')
         hLayout = QtGui.QHBoxLayout()
         hLayout.addWidget(updateBtn)
-        hLayout.addWidget(viewBtn)
-        hLayout.addWidget(deleteBtn)
+        #hLayout.addWidget(viewBtn)
+        #hLayout.addWidget(deleteBtn)
         hLayout.setContentsMargins(5,2,5,2)
         widget.setLayout(hLayout)
         return widget
@@ -104,7 +113,6 @@ class Example(QtGui.QWidget):
         self.label_msg.setObjectName(_fromUtf8("label"))
         self.label_msg.setText(QtGui.QApplication.translate("MainWindow","208-09-03 11:30 Monday\n Welcome home, Child",None,QtGui.QApplication.UnicodeUTF8))
     def TimerStart(self):
-        self.startTime=time.time()
         self.lcdNumber = QtGui.QLCDNumber(self)
         self.lcdNumber.setGeometry(QtCore.QRect(600, 600, 231, 61))
         font = QtGui.QFont()
@@ -116,7 +124,18 @@ class Example(QtGui.QWidget):
         self.lcdNumber.display("00:00:00")
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateDisplay)
+    def taskStartEnd(self,i):
+        print(i)
+        self.startTime=time.time()
         self.timer.start(1000)
+        print(self.sender().text())
+        if self.sender().text()=="Start":
+            self.sender().setText("Stop")
+            self.task_list[int(i)][3]="Stop"
+        else:
+            self.sender().setText("Start")
+            self.task_list[int(i)][3]="Start"
+        self.task_list[int(i)][2]=time.strftime("%m/%d %H:%M:%S", time.localtime())
     def updateDisplay(self):
         timecost=time.time()-self.startTime
         hours=int(timecost/3600)
@@ -125,8 +144,8 @@ class Example(QtGui.QWidget):
         text = "%02d:%02d:%02d" % (hours,minutes,seconds)
         self.lcdNumber.display(text)
         self.timer = QtCore.QTimer(self)
+        self.updateTaskList()
         self.timer.timeout.connect(self.updateDisplay)
-	
     def taskListInit(self):
         self.widget_task_list= QtGui.QTableWidget(self)
         self.widget_task_list.setGeometry(QtCore.QRect(500,0 ,580, 340))
@@ -140,22 +159,17 @@ class Example(QtGui.QWidget):
         self.widget_task_list.setEditTriggers(QtGui.QTableWidget.NoEditTriggers)
         self.widget_task_list.setSelectionBehavior(QtGui.QTableWidget.SelectRows)
         self.widget_task_list.setSelectionMode(QtGui.QTableWidget.SingleSelection)
-
-        task_list=[["Englisth", "page11 to page 12 read the english documents","",""],\
-		   ["Chinese", "page 12-12 recsite the documents","",""],\
-		   ["Math", "Read all the documents","",""],\
-		   ["Math", "Read all the documents","",""],\
-		   ["Math", "Read all the documents","",""],\
-		   ["Math", "Read all the documents","",""],\
-		   ]
-        for row_number, row_data in enumerate(task_list):
-            self.widget_task_list.insertRow(row_number)
+        self.updateTaskList()
+    def updateTaskList(self):
+        self.widget_task_list.clear()
+        print(list(enumerate(self.task_list)))
+        for row_number, row_data in enumerate(self.task_list):
+            #self.widget_task_list.insertRow(row_number)
             for i in range(len(row_data)+1):
                 if i<len(row_data):
                     self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(str(row_data[i])))
                 if i==len(row_data):
-                    self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_data[0])))
-
+                    self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),str(row_data[-1])))
         self.widget_task_list.resizeColumnsToContents()
 def main():
     

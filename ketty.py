@@ -133,23 +133,24 @@ class Example(QtGui.QWidget):
         self.timer.timeout.connect(self.updateDisplay)
     def taskStartEnd(self,i):
         if self.sender().text()=="Start" or self.sender().text()=="Continue":
-            self.startTime=time.time()
             if self.sender().text()=="Start":
+                self.startTime=time.time()
                 self.task_list[int(i)][2]=time.strftime("%H:%M:%S", time.localtime())
             self.sender().setText("Finished")
             self.timer.start(1000)
-            print "XXXXXXXXXXXXXXXXXXXXXXXXX"
         else:
             self.sender().setText("Continue")
             self.task_list[int(i)][3]=time.strftime("%H:%M:%S", time.localtime())
             self.startTime=time.mktime(time.strptime(time.strftime("%Y/%m/%d ",time.localtime())+self.task_list[int(i)][2],"%Y/%m/%d %H:%M:%S"))
             timecost=time.time()-self.startTime
-            self.timer.stop()
             hours=int(timecost/3600)
             minutes=int((timecost-hours*3600)/60)
             seconds=timecost%60
             text = "%02d:%02d:%02d" % (hours,minutes,seconds)
+            self.lcdNumber.display(text)
             self.task_list[int(i)][4]=text
+            self.timer.stop()
+            self.updateTaskList()
         self.currentTaskId=int(i)
     def SetTaskList(self):
         self.task_list=[["English", "page11 to page 12 ","","","","Start"],\

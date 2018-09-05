@@ -2,21 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-ZetCode PyQt4 tutorial 
-
-This program centers a window 
-on the screen. 
-
-author: Jan Bodnar
-website: zetcode.com 
-last edited: October 2011
+author: Yong Tan
 """
 
 import sys
 from PyQt4 import QtGui,QtCore
 import time
 import datetime
-#import ConfigParser 
+import configparser 
+import codecs
 
 
 try:
@@ -29,24 +23,27 @@ class Example(QtGui.QWidget):
     
     def __init__(self):
         super(Example, self).__init__()
-        #self.cf=ConfigParser.ConfigParser()
+        self.cf=configparser.ConfigParser()
         #self.cf.read("config.ini")
-        #self.icon_image=self.cf.get("system","icon_image")
-        #self.icon_title=self.cf.get("system","icon_title")
-        self.icon_image='Hello_Kitty.jpg'
-        self.icon_title='time-meter'
-        self.socketStyle_w_select = "#widget_msg {border: 5px outset #BF408C;padding: 5px;border-radius: 15px;}widget *{}" 
+        self.cf.readfp(codecs.open('config.ini', "r", "utf-8"))
+        self.language=self.cf.get('system','language')
+        #self.icon_image='Hello_Kitty.jpg'
+        self.icon_image=self.cf.get("system","icon_image")
+        #self.icon_title='time-meter'
+        self.icon_title=self.cf.get(self.language,'icon_title_text')
+        self.start_text=self.cf.get(self.language,'start_text')
+        self.ongoing_text=self.cf.get(self.language,'ongoing_text')
+        self.finished_text=self.cf.get(self.language,'finished_text')
         self.initUI()
     def SetTaskList(self):
-        self.task_list=[["Englisth", "page11 to page 12 ","","Start"],\
-        	        ["Chinese", "page 12-12 recsite ","","Start"],\
-        	        ["Math", "Read all the documents","","Start"],\
-        	        ["Math", "Read all the documents","","Start"],\
-        	        ["Math", "Read all the documents","","Start"],\
-        	        ["Math", "Read all the documents","","Start"],\
+        self.task_list=[["Englisth", "page11 to page 12 ","","","",self.start_text],\
+        	        ["Chinese", "page 12-12 recsite ","","","",self.start_text],\
+        	        ["Math", "Read all the documents","","","",self.start_text],\
+        	        ["Math", "Read all the documents","","","",self.start_text],\
+        	        ["Math", "Read all the documents","","","",self.start_text],\
+        	        ["Math", "Read all the documents","","","",self.start_text],\
         	       ]
 
-        
     def initUI(self):               
         self.currentTaskId=-1
         self.justSender=None
@@ -138,12 +135,12 @@ class Example(QtGui.QWidget):
         self.timer.timeout.connect(self.updateDisplay)
     def taskStartEnd(self,i):
         self.currentIndex=i
-        if self.sender().text()=="Start" or self.sender().text()=="Finished":
+        if self.sender().text()==self.start_text or self.sender().text()==self.finished_text:
             self.startTime=time.time()
-            if self.sender().text()=="Start":
+            if self.sender().text()==self.start_text:
                 self.startTime=time.time()
                 self.task_list[int(i)][2]=time.strftime("%H:%M:%S", time.localtime())
-            self.sender().setText("Ongoing")
+            self.sender().setText(self.ongoing_text)
             self.sender().setStyleSheet(''' text-align : center;
                                           background-color : NavajoWhite;
                                           height : 30px;
@@ -151,7 +148,7 @@ class Example(QtGui.QWidget):
                                           font : 30px  ''')
             self.timer.start(1000)
         else:
-            self.sender().setText("Finished")
+            self.sender().setText(self.finished_text)
             self.task_list[int(i)][3]=time.strftime("%H:%M:%S", time.localtime())
             #self.startTime=time.mktime(time.strptime(time.strftime("%Y/%m/%d ",time.localtime())+self.task_list[int(i)][2],"%Y/%m/%d %H:%M:%S"))
             #self.startTime=time.time()
@@ -172,13 +169,6 @@ class Example(QtGui.QWidget):
             self.timer.stop()
             self.updateTaskList()
         self.currentTaskId=int(i)
-    def SetTaskList(self):
-        self.task_list=[["English", "page11 to page 12 ","","","","Start"],\
-        	        ["Chinese", "page 12-12 recsite ","","","","Start"],\
-        	        ["Math", "Read all the documents","","","","Start"],\
-        	        ["Math", "Read all the documents","","","","Start"],\
-        	        ["Math", "Read all the documents","","","","Start"],\
-        		]
     def updateDisplay(self):
         i=self.currentIndex
         timecost=time.time()-self.startTime
@@ -197,8 +187,8 @@ class Example(QtGui.QWidget):
         self.widget_task_list.clear()
         self.widget_task_list.setRowCount(10)
         self.widget_task_list.setColumnCount(6)
-        self.widget_task_list.setHorizontalHeaderLabels(["Subject", "Descript", "StartTime",
-                "EndTime", "TimeCost","Status"])
+        self.widget_task_list.setHorizontalHeaderLabels([self.cf.get(self.language,'subject_text'),self.cf.get(self.language,'descrip_text'),self.cf.get(self.language,'startTime_text') ,
+                self.cf.get(self.language,'endTime_text'), self.cf.get(self.language,'timeCost_text'),self.cf.get(self.language,'status_text')])
         self.widget_task_list.setAlternatingRowColors(True)
         self.widget_task_list.setEditTriggers(QtGui.QTableWidget.NoEditTriggers)
         self.widget_task_list.setSelectionBehavior(QtGui.QTableWidget.SelectRows)

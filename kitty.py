@@ -45,6 +45,7 @@ class Example(QtGui.QWidget):
                 l=li.split(",")
                 l.extend(["","","",self.start_text])
                 self.task_list.append(l)
+        #self.task_list.reverse()
 
     def initUI(self):               
         self.currentTaskId=-1

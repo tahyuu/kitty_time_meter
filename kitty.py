@@ -24,8 +24,10 @@ class Example(QtGui.QWidget):
     def __init__(self):
         super(Example, self).__init__()
         self.cf=configparser.ConfigParser()
+        self.tsk=configparser.ConfigParser()
         #self.cf.read("config.ini")
         self.cf.readfp(codecs.open('config.ini', "r", "utf-8"))
+        self.tsk.readfp(codecs.open('task.ini', "r", "utf-8"))
         self.language=self.cf.get('system','language')
         #self.icon_image='Hello_Kitty.jpg'
         self.icon_image=self.cf.get("system","icon_image")
@@ -36,13 +38,13 @@ class Example(QtGui.QWidget):
         self.finished_text=self.cf.get(self.language,'finished_text')
         self.initUI()
     def SetTaskList(self):
-        self.task_list=[["Englisth", "page11 to page 12 ","","","",self.start_text],\
-        	        ["Chinese", "page 12-12 recsite ","","","",self.start_text],\
-        	        ["Math", "Read all the documents","","","",self.start_text],\
-        	        ["Math", "Read all the documents","","","",self.start_text],\
-        	        ["Math", "Read all the documents","","","",self.start_text],\
-        	        ["Math", "Read all the documents","","","",self.start_text],\
-        	       ]
+        self.task_list=[]
+        self.task_list_str=(self.tsk.get('abc','task_list'))
+        for li in self.task_list_str.split(";"):
+            if li:
+                l=li.split(",")
+                l.extend(["","","",self.start_text])
+                self.task_list.append(l)
 
     def initUI(self):               
         self.currentTaskId=-1

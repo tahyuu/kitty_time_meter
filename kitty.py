@@ -70,10 +70,15 @@ class Example(QtGui.QWidget):
         widget=QtGui.QWidget()
         updateBtn = QtGui.QPushButton(name)
         updateBtn.setStyleSheet(''' text-align : center;
-                                          background-color : NavajoWhite;
+                                          background-color : Red;
                                           height : 30px;
                                           border-style: outset;
                                           font : 30px  ''')
+        #updateBtn.setStyleSheet(''' text-align : center;
+        #                                  background-color : NavajoWhite;
+        #                                  height : 30px;
+        #                                  border-style: outset;
+        #                                  font : 30px  ''')
 
         updateBtn.clicked.connect(lambda:self.taskStartEnd(id))
 
@@ -133,15 +138,20 @@ class Example(QtGui.QWidget):
         self.timer.timeout.connect(self.updateDisplay)
     def taskStartEnd(self,i):
         self.currentIndex=i
-        if self.sender().text()=="Start" or self.sender().text()=="Continue":
+        if self.sender().text()=="Start" or self.sender().text()=="Finished":
             self.startTime=time.time()
             if self.sender().text()=="Start":
                 self.startTime=time.time()
                 self.task_list[int(i)][2]=time.strftime("%H:%M:%S", time.localtime())
-            self.sender().setText("Finished")
+            self.sender().setText("Ongoing")
+            self.sender().setStyleSheet(''' text-align : center;
+                                          background-color : NavajoWhite;
+                                          height : 30px;
+                                          border-style: outset;
+                                          font : 30px  ''')
             self.timer.start(1000)
         else:
-            self.sender().setText("Continue")
+            self.sender().setText("Finished")
             self.task_list[int(i)][3]=time.strftime("%H:%M:%S", time.localtime())
             #self.startTime=time.mktime(time.strptime(time.strftime("%Y/%m/%d ",time.localtime())+self.task_list[int(i)][2],"%Y/%m/%d %H:%M:%S"))
             #self.startTime=time.time()
@@ -154,6 +164,11 @@ class Example(QtGui.QWidget):
             text = "%02d:%02d:%02d" % (hours,minutes,seconds)
             self.lcdNumber.display(text)
             self.task_list[int(i)][4]=str(int(timecost))
+            self.sender().setStyleSheet(''' text-align : center;
+                                          background-color : rgb(138,226,52);
+                                          height : 30px;
+                                          border-style: outset;
+                                          font : 30px  ''')
             self.timer.stop()
             self.updateTaskList()
         self.currentTaskId=int(i)

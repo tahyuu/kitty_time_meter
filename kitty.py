@@ -10,8 +10,8 @@ from PyQt4 import QtGui,QtCore
 import time
 import datetime
 import codecs
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 
 try:
@@ -45,13 +45,13 @@ class Example(QtGui.QWidget):
     def SetTaskList(self):
         self.task_list=[]
         self.task_list_str=(self.tsk.get('abc','task_list'))
-        print self.task_list_str
+        #print self.task_list_str
         for li in self.task_list_str.split(";"):
             if li:
                 l2=[]
                 l=li.split(",")
-	        for s in l:
-		    s=_fromUtf8(s)
+                for s in l:
+                    s=_fromUtf8(s)
                     l2.append(s)
                 l2.extend(["","","",_fromUtf8(self.start_text)])
                 self.task_list.append(l2)

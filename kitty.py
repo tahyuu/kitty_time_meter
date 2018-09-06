@@ -11,7 +11,7 @@ import time
 import datetime
 import codecs
 reload(sys)
-sys.setdefaultencoding('utf-8')
+sys.setdefaultencoding('utf8')
 
 
 try:
@@ -36,6 +36,7 @@ class Example(QtGui.QWidget):
         self.language=self.cf.get('system','language')
         #self.icon_image='Hello_Kitty.jpg'
         self.icon_image=self.cf.get("system","icon_image")
+	self.today_date=time.strftime("%Y%m%d",time.localtime())
         #self.icon_title='time-meter'
         self.icon_title=self.cf.get(self.language,'icon_title_text')
         self.start_text=self.cf.get(self.language,'start_text')
@@ -44,19 +45,15 @@ class Example(QtGui.QWidget):
         self.initUI()
     def SetTaskList(self):
         self.task_list=[]
-        self.task_list_str=(self.tsk.get('abc','task_list'))
-        print self.task_list_str
-        for li in self.task_list_str.split(";"):
-            if li:
-                l2=[]
-                l=li.split(",")
-	        for s in l:
-		    s=_fromUtf8(s)
-                    l2.append(s)
-                l2.extend(["","","",_fromUtf8(self.start_text)])
-                self.task_list.append(l2)
-        #self.task_list.reverse()
-
+	try:
+            self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
+            for li in self.task_list_str.split(";"):
+                if li:
+                    l=li.split(",")
+                    l.extend(["","","",self.start_text])
+                    self.task_list.append(l)
+	except:
+	    pass
     def initUI(self):               
         self.currentTaskId=-1
         self.justSender=None
@@ -238,11 +235,11 @@ class Example(QtGui.QWidget):
                 
             for i in range(len(row_data)+1):
                 if i<len(row_data)-1:
-                    self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(str(row_data[i])))
+                    self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(_fromUtf8(str(row_data[i]))))
                 if i==len(row_data)-1:
                     #when the rowid==-1, that means the first time we just need to update add the button
                     if rowid==-1:
-                    	self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),str(row_data[-1])))
+                    	self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),_fromUtf8(str(row_data[-1]))))
         #self.widget_task_list.resizeColumnsToContents()
 def main():
     

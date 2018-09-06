@@ -33,7 +33,7 @@ class Example(QtGui.QWidget):
         self.language=self.cf.get('system','language')
         #self.icon_image='Hello_Kitty.jpg'
         self.icon_image=self.cf.get("system","icon_image")
-	self.today_date=time.strftime("%Y%m%d",time.localtime())
+        self.today_date=time.strftime("%Y%m%d",time.localtime())
         #self.icon_title='time-meter'
         self.icon_title=self.cf.get(self.language,'icon_title_text')
         self.start_text=self.cf.get(self.language,'start_text')
@@ -42,15 +42,15 @@ class Example(QtGui.QWidget):
         self.initUI()
     def SetTaskList(self):
         self.task_list=[]
-	try:
+        try:
             self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
             for li in self.task_list_str.split(";"):
                 if li:
                     l=li.split(",")
                     l.extend(["","","",self.start_text])
                     self.task_list.append(l)
-	except:
-	    pass
+        except:
+            pass
     def initUI(self):               
         self.currentTaskId=-1
         self.justSender=None

@@ -43,6 +43,7 @@ class Example(QtGui.QWidget):
     def SetTaskList(self):
         self.task_list=[]
         try:
+            self.tsk.readfp(codecs.open('task.ini', "r", "utf-8"))
             self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
             for li in self.task_list_str.split(";"):
                 if li:
@@ -139,7 +140,10 @@ class Example(QtGui.QWidget):
                                     border-style: outset;
                                     font : 13px; ''')
         self.timer = QtCore.QTimer(self)
+        self.timer_update_task_list = QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateDisplay)
+        self.timer_update_task_list.timeout.connect(self.updateTaskList)
+        self.timer_update_task_list.start(10000)
     def taskStartEnd(self,i):
         self.currentIndex=i
         if self.sender().text()==self.start_text or self.sender().text()==self.finished_text:
@@ -218,6 +222,7 @@ class Example(QtGui.QWidget):
         self.widget_task_list.horizontalHeader().setStyleSheet(stylesheet)
         self.updateTaskList()
     def updateTaskList(self):
+        self.SetTaskList()
         rowid=self.currentTaskId
         #self.widget_task_list.clear()
         #print(list(enumerate(self.task_list)))

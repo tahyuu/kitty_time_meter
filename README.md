@@ -2,7 +2,12 @@
 
 ### install config parser
 ```
-python -m pip install ConfigParser
+sudo pip install ConfigParser
+```
+### install pyqt4
+```   
+sudo apt-get update
+sudo apt-get install python-qt4
 ```
 ### interface
 

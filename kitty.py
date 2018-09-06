@@ -10,9 +10,6 @@ from PyQt4 import QtGui,QtCore
 import time
 import datetime
 import codecs
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 
 try:
     import configparser 

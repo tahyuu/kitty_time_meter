@@ -9,10 +9,15 @@ import sys
 from PyQt4 import QtGui,QtCore
 import time
 import datetime
-import configparser 
 import codecs
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 
+try:
+    import configparser 
+except:
+    import ConfigParser as configparser 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -26,7 +31,7 @@ class Example(QtGui.QWidget):
         self.cf=configparser.ConfigParser()
         self.tsk=configparser.ConfigParser()
         #self.cf.read("config.ini")
-        self.cf.readfp(codecs.open('config.ini', "r", "utf-8"))
+        self.cf.readfp(codecs.open('Config.ini', "r", "utf-8"))
         self.tsk.readfp(codecs.open('task.ini', "r", "utf-8"))
         self.language=self.cf.get('system','language')
         #self.icon_image='Hello_Kitty.jpg'
@@ -40,11 +45,16 @@ class Example(QtGui.QWidget):
     def SetTaskList(self):
         self.task_list=[]
         self.task_list_str=(self.tsk.get('abc','task_list'))
+        print self.task_list_str
         for li in self.task_list_str.split(";"):
             if li:
+                l2=[]
                 l=li.split(",")
-                l.extend(["","","",self.start_text])
-                self.task_list.append(l)
+	        for s in l:
+		    s=_fromUtf8(s)
+                    l2.append(s)
+                l2.extend(["","","",_fromUtf8(self.start_text)])
+                self.task_list.append(l2)
         #self.task_list.reverse()
 
     def initUI(self):               

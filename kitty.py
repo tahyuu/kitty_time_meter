@@ -28,11 +28,11 @@ class Example(QtGui.QWidget):
         super(Example, self).__init__()
         self.cf=configparser.ConfigParser()
         self.tsk=configparser.ConfigParser()
-        #self.cf.read("config.ini")
-        self.cf.readfp(codecs.open('Config.ini', "r", "utf-8"))
-        self.tsk.readfp(codecs.open('task.ini', "r", "utf-8"))
+        #self.cf.read("Config/config.ini")
+        self.cf.readfp(codecs.open('Config/Config.ini', "r", "utf-8"))
+        self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
         self.language=self.cf.get('system','language')
-        #self.icon_image='Hello_Kitty.jpg'
+        #self.icon_image='img/Hello_Kitty.jpg'
         self.icon_image=self.cf.get("system","icon_image")
         self.today_date=time.strftime("%Y%m%d",time.localtime())
         #self.icon_title='time-meter'
@@ -44,7 +44,7 @@ class Example(QtGui.QWidget):
     def SetTaskList(self):
         self.task_list=[]
         try:
-            self.tsk.readfp(codecs.open('task.ini', "r", "utf-8"))
+            self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
             self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
             for li in self.task_list_str.split(";"):
                 if li:
@@ -226,7 +226,7 @@ class Example(QtGui.QWidget):
         self.updateTaskList(False)
     def updateTaskList(self,refresh_task=True):
         if refresh_task:
-	    os.system("cd ~/time_meter&&git pull&")
+            os.system("cd ~/time_meter&&git pull&")
             self.SetTaskList()
             self.widget_task_list.clearContents()
         #    self.taskListInit()

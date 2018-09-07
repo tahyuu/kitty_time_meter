@@ -144,7 +144,7 @@ class Example(QtGui.QWidget):
         self.timer_update_task_list = QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateDisplay)
         self.timer_update_task_list.timeout.connect(self.updateTaskList)
-        self.timer_update_task_list.start(30000)
+        self.timer_update_task_list.start(300000)
     def taskStartEnd(self,i):
         self.timer_update_task_list.stop()
         

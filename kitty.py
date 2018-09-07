@@ -10,6 +10,7 @@ from PyQt4 import QtGui,QtCore
 import time
 import datetime
 import codecs
+import os
 
 try:
     import configparser 
@@ -45,6 +46,7 @@ class Example(QtGui.QWidget):
         try:
             self.tsk.readfp(codecs.open('task.ini', "r", "utf-8"))
             self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
+            print self.task_list_str
             for li in self.task_list_str.split(";"):
                 if li:
                     l=li.split(",")
@@ -222,7 +224,9 @@ class Example(QtGui.QWidget):
         self.widget_task_list.horizontalHeader().setStyleSheet(stylesheet)
         self.updateTaskList()
     def updateTaskList(self):
+	os.system("cd /home/pi/time_meter&&git pull")
         self.SetTaskList()
+	
         rowid=self.currentTaskId
         #self.widget_task_list.clear()
         #print(list(enumerate(self.task_list)))
@@ -237,12 +241,11 @@ class Example(QtGui.QWidget):
                 
             for i in range(len(row_data)+1):
                 if i<len(row_data)-1:
-                    self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(_fromUtf8(str(row_data[i]))))
+                    self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(_fromUtf8(str(row_data[i].encode("utf-8")))))
                 if i==len(row_data)-1:
                     #when the rowid==-1, that means the first time we just need to update add the button
                     if rowid==-1:
-                    	self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),_fromUtf8(str(row_data[-1]))))
-        #self.widget_task_list.resizeColumnsToContents()
+                    	self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),_fromUtf8(str(row_data[-1].encode("utf-8")))))
 def main():
     
     app = QtGui.QApplication(sys.argv)

@@ -145,7 +145,7 @@ class Example(QtGui.QWidget):
         self.timer_update_task_list = QtCore.QTimer(self)
         self.timer.timeout.connect(self.updateDisplay)
         self.timer_update_task_list.timeout.connect(self.updateTaskList)
-        self.timer_update_task_list.start(10000)
+        self.timer_update_task_list.start(30000)
     def taskStartEnd(self,i):
         self.currentIndex=i
         if self.sender().text()==self.start_text or self.sender().text()==self.finished_text:
@@ -224,7 +224,9 @@ class Example(QtGui.QWidget):
         self.widget_task_list.horizontalHeader().setStyleSheet(stylesheet)
         self.updateTaskList()
     def updateTaskList(self):
-	os.system("cd /home/pi/time_meter&&git pull")
+	#os.system("cd /home/pi/time_meter&&git pull")
+        self.taskListInit()
+        #self.widget_task_list.clear()
         self.SetTaskList()
 	
         rowid=self.currentTaskId

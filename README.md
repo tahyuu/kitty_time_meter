@@ -17,4 +17,4 @@ sudo inatall/install.sh
 
 ### 3, the program interface
 
-![Image text](https://github.com/tahyuu/kitty_time_meter/blob/master/Interface.png)
+![Image text](https://github.com/tahyuu/kitty_time_meter/blob/master/img/Interface.png)

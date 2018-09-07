@@ -146,6 +146,8 @@ class Example(QtGui.QWidget):
         self.timer_update_task_list.timeout.connect(self.updateTaskList)
         self.timer_update_task_list.start(30000)
     def taskStartEnd(self,i):
+        self.timer_update_task_list.stop()
+        
         self.currentIndex=i
         if self.sender().text()==self.start_text or self.sender().text()==self.finished_text:
             self.startTime=time.time()
@@ -179,7 +181,7 @@ class Example(QtGui.QWidget):
                                           border-style: outset;
                                           font : 30px  ''')
             self.timer.stop()
-            self.updateTaskList()
+            self.updateTaskList(False)
         self.currentTaskId=int(i)
     def updateDisplay(self):
         i=self.currentIndex
@@ -191,7 +193,7 @@ class Example(QtGui.QWidget):
         seconds=timecost%60
         text = "%02d:%02d:%02d" % (hours,minutes,seconds)
         self.lcdNumber.display(text)
-        self.updateTaskList()
+        self.updateTaskList(False)
     def taskListInit(self):
         self.widget_task_list= QtGui.QTableWidget(self)
         self.widget_task_list.setGeometry(QtCore.QRect(10,10,1250, 490))
@@ -221,10 +223,13 @@ class Example(QtGui.QWidget):
         #self.widget_task_list.setRowHeight(0,40)
         stylesheet = "::section{Background-color:#A640BF;border-radius:4px;}"
         self.widget_task_list.horizontalHeader().setStyleSheet(stylesheet)
-        self.updateTaskList()
-    def updateTaskList(self):
-	#os.system("cd /home/pi/time_meter&&git pull")
-        #self.taskListInit()
+        self.updateTaskList(False)
+    def updateTaskList(self,refresh_task=True):
+        if refresh_task:
+	    os.system("cd ~/time_meter&&git pull&")
+            self.SetTaskList()
+            self.widget_task_list.clearContents()
+        #    self.taskListInit()
         #self.widget_task_list.clear()
         
         rowid=self.currentTaskId

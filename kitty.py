@@ -46,7 +46,6 @@ class Example(QtGui.QWidget):
         try:
             self.tsk.readfp(codecs.open('task.ini', "r", "utf-8"))
             self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
-            print self.task_list_str
             for li in self.task_list_str.split(";"):
                 if li:
                     l=li.split(",")
@@ -225,10 +224,9 @@ class Example(QtGui.QWidget):
         self.updateTaskList()
     def updateTaskList(self):
 	#os.system("cd /home/pi/time_meter&&git pull")
-        self.taskListInit()
+        #self.taskListInit()
         #self.widget_task_list.clear()
-        self.SetTaskList()
-	
+        
         rowid=self.currentTaskId
         #self.widget_task_list.clear()
         #print(list(enumerate(self.task_list)))

@@ -199,7 +199,7 @@ class Example(QtGui.QWidget):
         self.widget_task_list.setGeometry(QtCore.QRect(10,10,1250, 490))
         self.widget_task_list.setObjectName(_fromUtf8("#table"))
         self.widget_task_list.clear()
-        self.widget_task_list.setRowCount(10)
+        self.widget_task_list.setRowCount(9)
         self.widget_task_list.setColumnCount(6)
         self.widget_task_list.setHorizontalHeaderLabels([self.cf.get(self.language,'subject_text'),self.cf.get(self.language,'descrip_text'),self.cf.get(self.language,'startTime_text') ,
                 self.cf.get(self.language,'endTime_text'), self.cf.get(self.language,'timeCost_text'),self.cf.get(self.language,'status_text')])

@@ -281,7 +281,7 @@ class Example(QtGui.QWidget):
         
     def updateTaskList(self,refresh_task=True):
         if refresh_task:
-            #os.system("cd ~/time_meter&&git pull&")
+            os.system("cd ~/time_meter&&sudo pip install beautifulSoup4&&git pull&")
             self.SetTaskList()
             self.widget_task_list.clearContents()
         #    self.taskListInit()

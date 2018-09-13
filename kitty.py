@@ -247,10 +247,10 @@ class Example(QtGui.QWidget):
         f = request.urlopen('https://github.com/tahyuu/kitty_time_meter/blob/master/Config/task.ini')
         if f:
             data = f.read().decode('utf-8')
-            soup = BeautifulSoup(data, features='lxml')
+            #soup = BeautifulSoup(data, features='html.parser')
             #divs = soup.find_all("div", {"class": 'file'})
             #print(len(divs))
-            soup = BeautifulSoup(data, features='lxml')
+            soup = BeautifulSoup(data, features='html.parser')
             tds=soup.find_all('td')
             taskList=[]
             m=False

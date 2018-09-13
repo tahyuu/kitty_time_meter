@@ -11,6 +11,10 @@ import time
 import datetime
 import codecs
 import os
+from urllib import request
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import re
 
 try:
     import configparser 
@@ -20,6 +24,13 @@ try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
     _fromUtf8 = lambda s:s
+
+
+
+class Task:
+    def __init__(self,date):
+        self.date=date
+        self.dolist=[]
 
 
 class Example(QtGui.QWidget):
@@ -44,9 +55,12 @@ class Example(QtGui.QWidget):
     def SetTaskList(self):
         self.task_list=[]
         try:
-            self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
-            self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
-            for li in self.task_list_str.split(";"):
+            print("updating task list ............")
+            today_task=self.getTaskListFromNetwork()
+            print(today_task.dolist)
+            #self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
+            #self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
+            for li in today_task.dolist:
                 if li:
                     l=li.split(",")
                     l.extend(["","","",self.start_text])
@@ -224,9 +238,45 @@ class Example(QtGui.QWidget):
         stylesheet = "::section{Background-color:#A640BF;border-radius:4px;}"
         self.widget_task_list.horizontalHeader().setStyleSheet(stylesheet)
         self.updateTaskList(False)
+    def getTaskListFromNetwork(self):
+        returnTask=None
+        with request.urlopen('https://github.com/tahyuu/kitty_time_meter/blob/master/Config/task.ini') as f:
+            data = f.read().decode('utf-8')
+            soup = BeautifulSoup(data, features='lxml')
+            #divs = soup.find_all("div", {"class": 'file'})
+            #print(len(divs))
+            soup = BeautifulSoup(data, features='lxml')
+            tds=soup.find_all('td')
+            taskList=[]
+            m=False
+            i=0
+            for td in tds:
+                if td.get_text().strip():
+                    m=re.search("\[\d+\]",td.get_text().strip())
+                    if m:
+                        try:
+                            taskList.append(task)
+                        except:
+                            pass
+                        task = Task(m.group(0).replace("[","").replace("]",""))
+                    else:
+                        try:
+                            task.dolist.append(td.get_text().strip().replace("task_list=",""))
+                        except:
+                            pass
+                i+=1
+                if i==len(tds)-1:
+                    taskList.append(task)
+        
+            for task in taskList:
+                if task.date==time.strftime("%Y%m%d", time.localtime()):
+                    returnTask=task
+           
+        return returnTask
+        
     def updateTaskList(self,refresh_task=True):
         if refresh_task:
-            os.system("cd ~/time_meter&&git pull&")
+            #os.system("cd ~/time_meter&&git pull&")
             self.SetTaskList()
             self.widget_task_list.clearContents()
         #    self.taskListInit()

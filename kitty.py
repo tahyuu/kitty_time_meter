@@ -11,14 +11,15 @@ import time
 import datetime
 import codecs
 import os
-from urllib import request
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
 import re
 
 try:
     import configparser 
+    from urllib import request
+    from urllib.request import urlopen
 except:
+    import urllib as request
     import ConfigParser as configparser 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -54,10 +55,11 @@ class Example(QtGui.QWidget):
         self.initUI()
     def SetTaskList(self):
         self.task_list=[]
-        try:
+        if True:
             print("updating task list ............")
             today_task=self.getTaskListFromNetwork()
-            print(today_task.dolist)
+            #print(today_task.dolist)
+            print today_task.dolist
             #self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
             #self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
             for li in today_task.dolist:
@@ -65,6 +67,8 @@ class Example(QtGui.QWidget):
                     l=li.split(",")
                     l.extend(["","","",self.start_text])
                     self.task_list.append(l)
+        try:
+            pass
         except:
             pass
     def initUI(self):               
@@ -240,7 +244,8 @@ class Example(QtGui.QWidget):
         self.updateTaskList(False)
     def getTaskListFromNetwork(self):
         returnTask=None
-        with request.urlopen('https://github.com/tahyuu/kitty_time_meter/blob/master/Config/task.ini') as f:
+        f = request.urlopen('https://github.com/tahyuu/kitty_time_meter/blob/master/Config/task.ini')
+        if f:
             data = f.read().decode('utf-8')
             soup = BeautifulSoup(data, features='lxml')
             #divs = soup.find_all("div", {"class": 'file'})

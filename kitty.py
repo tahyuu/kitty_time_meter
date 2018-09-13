@@ -59,7 +59,7 @@ class Example(QtGui.QWidget):
             print("updating task list ............")
             today_task=self.getTaskListFromNetwork()
             #print(today_task.dolist)
-            print today_task.dolist
+            #print today_task.dolist
             #self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
             #self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
             for li in today_task.dolist:

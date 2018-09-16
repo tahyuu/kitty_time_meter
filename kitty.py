@@ -62,6 +62,8 @@ class Example(QtGui.QWidget):
             #print today_task.dolist
             #self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
             #self.task_list_str=(self.tsk.get(self.today_date,'task_list'))
+            if not today_task:
+                return
             for li in today_task.dolist:
                 if li:
                     l=li.split(",")
@@ -281,7 +283,7 @@ class Example(QtGui.QWidget):
         
     def updateTaskList(self,refresh_task=True):
         if refresh_task:
-            os.system("cd ~/time_meter&&sudo pip install beautifulSoup4&&git pull&")
+            #os.system("cd ~/time_meter&&sudo pip install beautifulSoup4&&git pull&")
             self.SetTaskList()
             self.widget_task_list.clearContents()
         #    self.taskListInit()

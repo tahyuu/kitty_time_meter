@@ -6,7 +6,7 @@ author: Yong Tan
 """
 
 import sys
-from PyQt4 import QtGui,QtCore
+from PyQt4 import QtGui,QtCore,Qt
 import time
 import datetime
 import codecs
@@ -77,9 +77,15 @@ class Example(QtGui.QWidget):
         self.currentTaskId=-1
         self.justSender=None
         self.SetTaskList()
-        self.resize(1280, 800)
+        desktop =QtGui.QApplication.desktop()
+        self.desktop_width = desktop.width()
+        self.desktop_height = desktop.height()
+        print (self.desktop_width)
+        #self.resize(1280, 800)
+        self.resize(self.desktop_width, self.desktop_height)
         self.setWindowTitle(self.icon_title)
         self.setWindowIcon(QtGui.QIcon(self.icon_image))
+        self.setWindowFlags(Qt.Qt.CustomizeWindowHint)
         self.center()
         #self.welcomeMsg()
         self.taskListInit()
@@ -148,7 +154,7 @@ class Example(QtGui.QWidget):
         self.label_msg.setText(QtGui.QApplication.translate("MainWindow","208-09-03 11:30 Monday\n Welcome home, Child",None,QtGui.QApplication.UnicodeUTF8))
     def TimerStart(self):
         self.lcdNumber = QtGui.QLCDNumber(self)
-        self.lcdNumber.setGeometry(QtCore.QRect(10, 500, 1250, 280))
+        self.lcdNumber.setGeometry(QtCore.QRect(10, self.desktop_height-290, self.desktop_width-30, 280))
         font = QtGui.QFont()
         font.setPointSize(13)
         self.lcdNumber.setFont(font)
@@ -216,10 +222,10 @@ class Example(QtGui.QWidget):
         self.updateTaskList(False)
     def taskListInit(self):
         self.widget_task_list= QtGui.QTableWidget(self)
-        self.widget_task_list.setGeometry(QtCore.QRect(10,10,1250, 490))
+        self.widget_task_list.setGeometry(QtCore.QRect(10,10,self.desktop_width-30, self.desktop_height-300))
         self.widget_task_list.setObjectName(_fromUtf8("#table"))
         self.widget_task_list.clear()
-        self.widget_task_list.setRowCount(9)
+        self.widget_task_list.setRowCount(11)
         self.widget_task_list.setColumnCount(6)
         self.widget_task_list.setHorizontalHeaderLabels([self.cf.get(self.language,'subject_text'),self.cf.get(self.language,'descrip_text'),self.cf.get(self.language,'startTime_text') ,
                 self.cf.get(self.language,'endTime_text'), self.cf.get(self.language,'timeCost_text'),self.cf.get(self.language,'status_text')])
@@ -238,7 +244,7 @@ class Example(QtGui.QWidget):
         header.setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
         header.setResizeMode(4, QtGui.QHeaderView.ResizeToContents)
         header.setResizeMode(5, QtGui.QHeaderView.ResizeToContents)
-        for i in range(10):
+        for i in range(15):
             self.widget_task_list.setRowHeight(i,50)
         #self.widget_task_list.setRowHeight(0,40)
         stylesheet = "::section{Background-color:#A640BF;border-radius:4px;}"

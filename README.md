@@ -7,6 +7,7 @@ the program is designed for child study time system. it can help child check how
 the program is designed on raspberry pi3. first of all we need make a raspberry system. and run below command to install enviroment.
 ```
 sudo pip install ConfigParser
+sudo pip install ps4
 sudo apt-get update
 sudo apt-get install python-qt4
 git clone https://github.com/tahyuu/kitty_time_meter.git time_meter

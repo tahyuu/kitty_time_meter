@@ -59,8 +59,10 @@ class Example(QtGui.QWidget):
         self.task_list=[]
         if True:
             print("updating task list ............")
-            today_task=self.getTaskListFromNetwork()
-            print today_task
+            #today_task=self.getTaskListFromNetwork()
+            #today_task=self.getTaskListFromNetwork()
+            today_task=self.GetTask()
+            #print today_task
             #print(today_task.dolist)
             #print today_task.dolist
             #self.tsk.readfp(codecs.open('Config/task.ini', "r", "utf-8"))
@@ -69,7 +71,8 @@ class Example(QtGui.QWidget):
                 return
             for li in today_task.dolist:
                 if li:
-                    l=li.split(",")
+                    #l=li.split(",")
+                    l=li
                     l.extend(["","","",self.start_text])
                     self.task_list.append(l)
         try:
@@ -83,7 +86,7 @@ class Example(QtGui.QWidget):
         desktop =QtGui.QApplication.desktop()
         self.desktop_width = desktop.width()
         self.desktop_height = desktop.height()
-        print (self.desktop_width)
+        #print (self.desktop_width)
         #self.resize(1280, 800)
         self.resize(self.desktop_width, self.desktop_height)
         self.setWindowTitle(self.icon_title)
@@ -312,43 +315,49 @@ class Example(QtGui.QWidget):
                 
             for i in range(len(row_data)+1):
                 if i<len(row_data)-1:
+                    #print row_data[i]
                     self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(_fromUtf8(str(row_data[i].encode("utf-8")))))
+                    #self.widget_task_list.setItem(row_number, i, QtGui.QTableWidgetItem(_fromUtf8(str(row_data[i]))))
                 if i==len(row_data)-1:
                     #when the rowid==-1, that means the first time we just need to update add the button
                     if rowid==-1:
                     	self.widget_task_list.setCellWidget(row_number, i,self.buttonForRow(str(row_number),_fromUtf8(str(row_data[-1].encode("utf-8")))))
 
     def bs4_paraser(self,html):
-        all_value = []
-        value = {}
+        task = Task('2018-12-10')
+        dolist=[]
         soup = BeautifulSoup(html, 'html.parser')
         all_div = soup.find_all('div', attrs={'class': 'message-other sign_message'})
         #print all_div
         for row in all_div:
+            object=''
             teacher=''
             msg=''
             all_div_teacher = row.find_all('div', attrs={'class': 'main'},limit=1)
             if all_div_teacher:
                 teacher=all_div_teacher[0].h1.string
                 if teacher==u'二（4）班(杨丽)':
-                    print u'数学',
+                    object=u' 数学 '
+                    #print u'数学',
                     pass
                 elif teacher==u'二（4）班(陈红)':
-                    print u'英语',
+                    object=u' 英语 '
+                    #print u'英语',
                     pass
                 elif teacher==u'二（4）班(唐佳媛)':
-                    print u'语文',
+                    object=u' 语文 '
+                    #print u'语文',
                     pass
                 #print all_div_teacher[0].h1.string
            
             all_div_date = row.find_all('div', attrs={'class': 'bottom'},limit=1)
             if all_div_date:
-                print all_div_date[0].span.string
-                pass
+                match_date=re.match(u"\d+\/\d+",all_div_date[0].span.string) 
+                if match_date:
+                    continue
     
             all_div_msg = row.find_all('div', attrs={'class': 'content'},limit=1)
           
-    	#print all_div_msg[0].span
             if all_div_msg:
                 if all_div_msg[0].span:
                     pre=re.compile('>(.*?)<')
@@ -380,34 +389,44 @@ class Example(QtGui.QWidget):
                 list_t = p.findall(msg)
                 if list_t:
                     for t in list_t:
-                        print "-----%s" %t.encode('utf-8')
+                        #dolist.append([object,t.encode('utf-8')])
+                        t=re.sub(u"\d\,",'',t)
+                        dolist.append([object,t])
+                        #print "-----%s" %t.encode('utf-8')
                 else:
                     #print msg.encode('utf-8')
+                    #msg=re.sub(u"讨论\s*\·",'',msg)
                     msg=re.sub(u"通知\s*\·",'',msg)
-                    msg=re.sub(u"数学\s*\：",' 1,',msg)
-                    #print msg.count(u"该消息暂不支持，请到手机客户端进行查看")
+                    msg=re.sub(u"数学\s*\：",'',msg)
                     if msg.count(u"该消息暂不支持，请到手机客户端进行查看")<=0:
-                        print "-----%s" %msg.encode('utf-8')
+                        #dolist.append([object,msg.encode('utf-8')])
+                        dolist.append([object,msg])
+                        #print "-----%s" %msg.encode('utf-8')
                 #match_obj=re.match(u"\d+",msg.decode('utf-8')) 
                 #if match_obj:
                 #    print match_obj.group()
+        task.dolist=dolist
+        #print task.dolist
+        return task
             
                 
             #print
     def GetTask(self):
-            filename = 'cookie.txt'
-            cookie = cookielib.MozillaCookieJar(filename)
-            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
-            #login
-            loginUrl= 'https://www.xiaoheiban.cn//NewUser-login?username=18321631629&password=rain20110621&autologin=true'
-            buff= opener.open(loginUrl)
-            loginstatus= buff.read()
-            if  eval(loginstatus)["status"]==200:
-                msgUrl= 'https://www.xiaoheiban.cn/Message'
-                buff= opener.open(msgUrl)
-                #data = f.read().decode('utf-8')
-                msg = buff.read().decode('utf-8')
-                bs4_paraser(msg)
+        filename = 'cookie.txt'
+        cookie = cookielib.MozillaCookieJar(filename)
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
+        #login
+        loginUrl= 'https://www.xiaoheiban.cn//NewUser-login?username=18321631629&password=rain20110621&autologin=true'
+        buff= opener.open(loginUrl)
+        loginstatus= buff.read()
+        task=None
+        if  eval(loginstatus)["status"]==200:
+            msgUrl= 'https://www.xiaoheiban.cn/Message'
+            buff= opener.open(msgUrl)
+            #data = f.read().decode('utf-8')
+            msg = buff.read().decode('utf-8')
+            task = self.bs4_paraser(msg)
+        return task
 
 def main():
     

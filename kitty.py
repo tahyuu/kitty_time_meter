@@ -57,7 +57,8 @@ class Example(QtGui.QWidget):
         self.initUI()
     def SetTaskList(self):
         self.task_list=[]
-        if True:
+        try:
+        #if True:
             print("updating task list ............")
             #today_task=self.getTaskListFromNetwork()
             #today_task=self.getTaskListFromNetwork()
@@ -75,7 +76,6 @@ class Example(QtGui.QWidget):
                     l=li
                     l.extend(["","","",self.start_text])
                     self.task_list.append(l)
-        try:
             pass
         except:
             pass

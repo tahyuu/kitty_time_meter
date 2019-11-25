@@ -29,3 +29,19 @@ language=chinese
 ### 3, How the program looks like
 
 ![Image text](https://github.com/tahyuu/kitty_time_meter/blob/master/img/Interface.png)
+
+
+### 4, How to set static ip for raspberry
+
+ /ect/dhcpcd.conf
+ 
+ #Enable Example static IP configration
+ interface eth0
+ static ip_address=192.168.8.10/24
+ static ip6_address=xxxxxxx
+ static routers=192.168.8.1
+ static domain_name_servers=192.168.8.1 xxxxxx
+ 
+ 
+ 
+ 
